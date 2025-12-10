@@ -107,6 +107,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+
+        <meta name="google-site-verification" content="Qq5BLSTKcVdxW4AzFovtUMXvWqGSr9QUNlT4n8kBJSI" />
         {/* Structured Data for better SEO */}
         <script
           type="application/ld+json"
