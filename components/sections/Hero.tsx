@@ -114,6 +114,7 @@ export function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
+                aria-label="GitHub Profile"
               >
                 <Github className="h-6 w-6" />
               </a>
@@ -122,12 +123,14 @@ export function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
+                aria-label="LinkedIn Profile"
               >
                 <Linkedin className="h-6 w-6" />
               </a>
               <a
                 href="mailto:gmchalanaprabhashwara@gmail.com"
                 className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
+                aria-label="Send Email"
               >
                 <Mail className="h-6 w-6" />
               </a>

@@ -21,14 +21,16 @@ export function Footer() {
             <ul className="space-y-2">
               {['Home', 'Expertise', 'Career', 'Projects', 'Contact'].map((item) => (
                 <li key={item}>
-                  <button
-                    onClick={() =>
-                      document.querySelector(`#${item.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth' })
-                    }
+                  <a
+                    href={`#${item.toLowerCase()}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.querySelector(`#${item.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {item}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -42,6 +44,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                aria-label="GitHub Profile"
               >
                 <Github className="h-5 w-5" />
               </a>
@@ -50,12 +53,14 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                aria-label="LinkedIn Profile"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
               <a
                 href="mailto:gmchalanaprabhashwara@gmail.com"
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                aria-label="Send Email"
               >
                 <Mail className="h-5 w-5" />
               </a>
