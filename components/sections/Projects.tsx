@@ -5,6 +5,7 @@ import { ExternalLink, Github, Eye, ArrowRight, Sparkles, FolderGit2 } from 'luc
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 const projects = [
   {
@@ -181,9 +182,10 @@ export function Projects() {
                 {/* Image Container */}
                 <div className="relative overflow-hidden h-48">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <img
-                    src={project.image}
+                  <Image
+                    src={`/${project.image}`}
                     alt={project.title}
+                    fill
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   

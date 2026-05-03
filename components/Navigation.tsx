@@ -54,19 +54,24 @@ export function Navigation() {
 
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.href);
+                }}
                 className="text-sm font-medium hover:text-primary transition-colors"
               >
                 {item.name}
-              </button>
+              </a>
             ))}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="ml-2"
+              aria-label="Toggle theme"
             >
               {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
@@ -81,6 +86,7 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle theme"
             >
               {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
@@ -92,6 +98,7 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -107,13 +114,17 @@ export function Navigation() {
         <div className="md:hidden bg-background border-b border-border">
           <div className="px-4 pt-2 pb-4 space-y-2">
             {navItems.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.href);
+                }}
                 className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-accent transition-colors"
               >
                 {item.name}
-              </button>
+              </a>
             ))}
           </div>
         </div>
