@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/_next/', '/static/'],
     },
-    sitemap: 'https://chalanaprabhashwara.vercel.app/sitemap.xml',
+    sitemap: 'https://chalana.miraqlabs.com/sitemap.xml',
   };
 }

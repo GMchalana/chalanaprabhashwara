@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     'Axonall Global',
     'DennamLK',
   ],
-  authors: [{ name: 'Chalana Prabhashwara', url: 'https://chalanaprabhashwara.vercel.app/' }],
+  authors: [{ name: 'Chalana Prabhashwara', url: 'https://chalana.miraqlabs.com' }],
   creator: 'Chalana Prabhashwara',
   publisher: 'Chalana Prabhashwara',
   formatDetection: {
@@ -39,17 +39,17 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://chalanaprabhashwara.vercel.app/'),
+  metadataBase: new URL('https://chalana.miraqlabs.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://chalanaprabhashwara.vercel.app/',
+    url: 'https://chalana.miraqlabs.com',
     title: 'Chalana Prabhashwara | Software Engineer & Full-Stack Developer',
     description: 'Explore the portfolio of Chalana Prabhashwara, a Software Engineer specializing in building premium web applications.',
-    siteName: 'Chalana Prabhashwara Portfolio',
+    siteName: 'Chalana Prabhashwara',
     images: [
       {
         url: '/og-image.png',
@@ -103,8 +103,8 @@ export default function RootLayout({
               "@type": "Person",
               "name": "Chalana Prabhashwara",
               "jobTitle": "Software Engineer",
-              "url": "https://chalanaprabhashwara.vercel.app/",
-              "image": "https://chalanaprabhashwara.vercel.app/profile.jpg",
+              "url": "https://chalana.miraqlabs.com",
+              "image": "https://chalana.miraqlabs.com/profile.jpg",
               "sameAs": [
                 "https://github.com/GMchalana",
                 "https://www.linkedin.com/in/chalana-prabhashwara/",
@@ -138,8 +138,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "Chalana Prabhashwara Portfolio",
-              "url": "https://chalanaprabhashwara.vercel.app/",
+              "name": "Chalana Prabhashwara",
+              "alternateName": ["Chalana Portfolio", "Chalana Prabhashwara Software Engineer"],
+              "url": "https://chalana.miraqlabs.com/",
               "author": "Chalana Prabhashwara",
               "description": "Portfolio of Chalana Prabhashwara, a Software Engineer & Full-Stack Developer."
             })
