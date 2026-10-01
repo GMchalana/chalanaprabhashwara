@@ -1,179 +1,237 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useState } from 'react';
-import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, ArrowDown } from 'lucide-react';
+
+const roles = ['Full-Stack Developer', 'UI/UX Engineer', 'Software Architect', 'Problem Solver'];
 
 export function Hero() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsVisible(true);
+    const t = setTimeout(() => setVisible(true), 150);
+    const handleMouse = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
+    };
+    window.addEventListener('mousemove', handleMouse, { passive: true });
+    return () => { clearTimeout(t); window.removeEventListener('mousemove', handleMouse); };
   }, []);
+
+  useEffect(() => {
+    const t = setInterval(() => setRoleIdx(p => (p + 1) % roles.length), 3500);
+    return () => clearInterval(t);
+  }, []);
+
+  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16"
+      ref={heroRef}
+      className="relative min-h-screen flex flex-col overflow-hidden"
+      style={{ background: '#050505' }}
     >
-      {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-cyan-50 to-sky-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 opacity-80">
-        {/* Animated Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(120,119,198,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(120,119,198,0.1)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)] dark:bg-[linear-gradient(rgba(120,119,198,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(120,119,198,0.05)_1px,transparent_1px)]" />
-        
-        {/* Floating Shapes Animation */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Large floating circles */}
-          <div className="absolute -top-20 -left-20 w-72 h-72 bg-gradient-to-r from-blue-200 to-cyan-200 rounded-full opacity-40 dark:from-blue-800 dark:to-cyan-800 dark:opacity-20 animate-float-slow" />
-          <div className="absolute top-1/4 -right-16 w-64 h-64 bg-gradient-to-r from-cyan-200 to-sky-200 rounded-full opacity-30 dark:from-cyan-800 dark:to-sky-800 dark:opacity-15 animate-float-medium" />
-          <div className="absolute bottom-1/4 -left-24 w-80 h-80 bg-gradient-to-r from-sky-200 to-blue-200 rounded-full opacity-25 dark:from-sky-800 dark:to-blue-800 dark:opacity-10 animate-float-slow" />
-          
-          {/* Medium floating circles */}
-          <div className="absolute top-1/3 right-1/4 w-40 h-40 bg-gradient-to-r from-cyan-100 to-blue-100 rounded-full opacity-50 dark:from-cyan-700 dark:to-blue-700 dark:opacity-25 animate-float-fast" />
-          <div className="absolute bottom-1/3 left-1/4 w-32 h-32 bg-gradient-to-r from-blue-100 to-cyan-100 rounded-full opacity-40 dark:from-blue-700 dark:to-cyan-700 dark:opacity-20 animate-float-medium" />
-          
-          {/* Small floating dots */}
-          <div className="absolute top-20 right-20 w-8 h-8 bg-cyan-300 rounded-full opacity-60 dark:bg-cyan-600 dark:opacity-30 animate-bounce-slow" />
-          <div className="absolute bottom-40 left-40 w-6 h-6 bg-blue-300 rounded-full opacity-50 dark:bg-blue-600 dark:opacity-25 animate-bounce-medium" />
-          <div className="absolute top-60 right-60 w-4 h-4 bg-sky-300 rounded-full opacity-70 dark:bg-sky-600 dark:opacity-35 animate-bounce-fast" />
-        </div>
-
-        {/* Animated Gradient Orbs */}
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse-slow dark:from-blue-600/10 dark:to-cyan-600/10" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-400/15 to-sky-400/15 rounded-full blur-3xl animate-pulse-medium dark:from-cyan-600/8 dark:to-sky-600/8" />
-        </div>
-      </div>
-
-      {/* Animated Noise Texture */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjEwIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIj48L2ZlVHVyYnVsZW5jZT48ZmVDb2xvck1hdHJpeCB0eXBlPSJzYXR1cmF0ZSIgdmFsdWVzPSIwIj48L2ZlQ29sb3JNYXRyaXg+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMC4wMyI+PC9yZWN0Pjwvc3ZnPg==')] opacity-20 dark:opacity-10" />
-
+      {/* Ambient light — moves with mouse */}
       <div
-        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      >
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          {/* Text Content */}
-          <div className="text-center lg:text-left space-y-8 flex-1">
-            <div
-              className={`inline-block transition-all duration-700 delay-200 ${
-                isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-              }`}
-            >
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-                Hi, I'm{' '}
-                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                  Chalana Prabhashwara
-                </span>
-              </h1>
-            </div>
+        className="absolute pointer-events-none"
+        style={{
+          width: '60vw',
+          height: '60vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(245,158,11,0.04) 0%, transparent 70%)',
+          left: `${mousePos.x * 100 - 30}%`,
+          top: `${mousePos.y * 100 - 30}%`,
+          transition: 'left 0.8s ease-out, top 0.8s ease-out',
+          filter: 'blur(40px)',
+        }}
+      />
 
-            <div
-              className={`transition-all duration-700 delay-400 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-            >
-              <p className="text-xl sm:text-2xl lg:text-3xl text-muted-foreground font-light">
-                Full-Stack Developer & Creative Problem Solver
-              </p>
-            </div>
+      {/* Grid lines background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)
+          `,
+          backgroundSize: '80px 80px',
+        }}
+      />
 
-            <div
-              className={`transition-all duration-700 delay-600 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-            >
-              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                Crafting elegant solutions to complex problems. Specializing in modern web
-                technologies and creating exceptional user experiences.
-              </p>
-            </div>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-6 lg:px-12 pt-28 pb-16">
 
-            <div
-              className={`flex flex-wrap items-center justify-center lg:justify-start gap-4 transition-all duration-700 delay-800 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-            >
-              <Button size="lg" onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}>
-                Get In Touch
-              </Button>
-              <Button size="lg" variant="outline" onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}>
-                View Projects
-              </Button>
-            </div>
+        {/* Top row: availability badge */}
+        <div
+          className="flex items-center gap-3 mb-auto transition-all duration-700"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(16px)',
+            transitionDelay: '100ms',
+          }}
+        >
+          <span className="relative flex h-2 w-2">
+            <span
+              className="absolute inline-flex h-full w-full rounded-full animate-ping-slow"
+              style={{ background: '#22c55e', opacity: 0.5 }}
+            />
+            <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: '#22c55e' }} />
+          </span>
+          <span className="text-label" style={{ color: '#A0A0A0' }}>Available for new projects</span>
+        </div>
 
-            <div
-              className={`flex items-center justify-center lg:justify-start gap-6 transition-all duration-700 delay-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+        {/* Center: Giant name */}
+        <div className="flex-1 flex flex-col justify-center py-8">
+          <div
+            className="transition-all duration-1000"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(40px)',
+              transitionDelay: '200ms',
+            }}
+          >
+            {/* Pre-name label */}
+            <p
+              className="section-num mb-4"
+              style={{ color: '#F59E0B' }}
             >
-              <a
-                href="https://github.com/GMchalana"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
-                aria-label="GitHub Profile"
+              Software Engineer — Sri Lanka
+            </p>
+
+            {/* Giant name */}
+            <h1 className="text-display" style={{ color: '#F8F8F8', lineHeight: 0.92 }}>
+              <span
+                className="block"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(60px)',
+                  transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transitionDelay: '300ms',
+                }}
               >
-                <Github className="h-6 w-6" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/chalana-prabhashwara/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
-                aria-label="LinkedIn Profile"
+                Chalana
+              </span>
+              <span
+                className="block"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? 'translateY(0)' : 'translateY(60px)',
+                  transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transitionDelay: '450ms',
+                  WebkitTextStroke: '1px rgba(248,248,248,0.25)',
+                  color: 'transparent',
+                }}
               >
-                <Linkedin className="h-6 w-6" />
-              </a>
-              <a
-                href="mailto:gmchalanaprabhashwara@gmail.com"
-                className="text-muted-foreground hover:text-foreground transition-colors hover:scale-110 transform duration-200"
-                aria-label="Send Email"
-              >
-                <Mail className="h-6 w-6" />
-              </a>
-            </div>
+                Prabhashwara
+              </span>
+            </h1>
           </div>
 
-          {/* Profile Image */}
+          {/* Role ticker */}
           <div
-            className={`flex-1 flex justify-center lg:justify-end transition-all duration-700 delay-300 ${
-              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-            }`}
+            className="mt-8 overflow-hidden"
+            style={{
+              height: '2.5rem',
+              opacity: visible ? 1 : 0,
+              transition: 'opacity 0.7s ease',
+              transitionDelay: '700ms',
+            }}
           >
-            <div className="relative">
-              {/* Animated gradient background circle */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full blur-xl opacity-20 animate-pulse-slow dark:from-blue-600 dark:to-cyan-600" />
-              
-              {/* Glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full blur-2xl opacity-10 animate-pulse-medium dark:opacity-5" />
-              
-              {/* Profile image container */}
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white/80 dark:border-gray-800/80 shadow-2xl backdrop-blur-sm">
-                <Image
-                  src="/profile.jpg"
-                  alt="Chalana Prabhashwara - Full-Stack Developer"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-700"
-                  priority
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                />
-              </div>
-              
-              {/* Animated decorative elements */}
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full border-4 border-white dark:border-gray-800 animate-ping-slow" />
-              <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full border-4 border-white dark:border-gray-800 animate-pulse-fast" />
+            <div
+              style={{
+                transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: `translateY(-${roleIdx * 40}px)`,
+              }}
+            >
+              {roles.map((r, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3"
+                  style={{ height: '40px' }}
+                >
+                  <span style={{ width: '24px', height: '1px', background: '#F59E0B', display: 'inline-block' }} />
+                  <span
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 400,
+                      color: '#A0A0A0',
+                      fontFamily: 'Space Grotesk, sans-serif',
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {r}
+                  </span>
+                </div>
+              ))}
             </div>
+          </div>
+        </div>
+
+        {/* Bottom row: description + CTAs */}
+        <div
+          className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-8"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'all 0.7s ease',
+            transitionDelay: '900ms',
+          }}
+        >
+          {/* Description */}
+          <p
+            style={{
+              fontSize: '1rem',
+              color: '#6B6B6B',
+              maxWidth: '380px',
+              lineHeight: 1.7,
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
+            Crafting high-performance digital products with modern web technologies.
+            Obsessed with clean code, precise interfaces, and seamless user experiences.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <button
+              onClick={() => scrollTo('projects')}
+              className="btn-primary flex items-center gap-2"
+            >
+              View Work
+              <ArrowRight size={14} />
+            </button>
+            <button
+              onClick={() => scrollTo('contact')}
+              className="btn-outline"
+            >
+              Get in Touch
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <ArrowDown className="h-6 w-6 text-muted-foreground" />
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 right-8 flex flex-col items-center gap-2"
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.7s ease',
+          transitionDelay: '1200ms',
+        }}
+      >
+        <span className="text-label" style={{ color: '#333333', writingMode: 'vertical-rl', letterSpacing: '0.15em' }}>
+          Scroll
+        </span>
+        <div className="animate-bounce" style={{ color: '#333333' }}>
+          <ArrowDown size={14} />
+        </div>
       </div>
+
+      {/* Bottom border */}
+      <div style={{ height: '1px', background: '#1F1F1F' }} />
     </section>
   );
 }

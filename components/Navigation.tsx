@@ -1,134 +1,158 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Menu, X } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
+import { Menu, X } from 'lucide-react';
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    setMounted(true);
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      const sections = ['home', 'about', 'expertise', 'career', 'projects', 'contact'];
+      const pos = window.scrollY + 120;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el && el.offsetTop <= pos) { setActiveSection(sections[i]); break; }
+      }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Expertise', href: '#expertise' },
-    { name: 'Career', href: '#career' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
-    }
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setMobileOpen(false);
   };
 
-  if (!mounted) return null;
+  const navItems = [
+    { id: 'about',    label: 'About' },
+    { id: 'expertise', label: 'Skills' },
+    { id: 'career',   label: 'Experience' },
+    { id: 'projects', label: 'Work' },
+    { id: 'contact',  label: 'Contact' },
+  ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-background/80 backdrop-blur-md border-b border-border shadow-sm'
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            Chalana Prabhashwara
-          </div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(item.href);
-                }}
-                className="text-sm font-medium hover:text-primary transition-colors"
+    <>
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+        style={{
+          background: scrolled ? 'rgba(5, 5, 5, 0.92)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid #1F1F1F' : '1px solid transparent',
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <button
+              onClick={() => scrollTo('home')}
+              className="relative group cursor-pointer"
+              aria-label="Go to top"
+            >
+              <span
+                className="text-base font-bold tracking-wider"
+                style={{ fontFamily: 'Space Grotesk, sans-serif', color: '#F8F8F8' }}
               >
-                {item.name}
-              </a>
-            ))}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="ml-2"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
+                CP
+              </span>
+              <span
+                className="absolute -bottom-0.5 left-0 w-full h-px origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+                style={{ background: '#F59E0B' }}
+              />
+            </button>
 
-          <div className="md:hidden flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-8">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className="relative group cursor-pointer transition-colors duration-200"
+                  style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 500,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    fontFamily: 'Inter, sans-serif',
+                    color: activeSection === item.id ? '#F59E0B' : '#A0A0A0',
+                    background: 'none',
+                    border: 'none',
+                  }}
+                >
+                  {item.label}
+                  <span
+                    className="absolute -bottom-0.5 left-0 h-px origin-left transition-all duration-300"
+                    style={{
+                      width: '100%',
+                      background: '#F59E0B',
+                      transform: activeSection === item.id ? 'scaleX(1)' : 'scaleX(0)',
+                    }}
+                  />
+                </button>
+              ))}
+
+              {/* Hire Me CTA */}
+              <button
+                onClick={() => scrollTo('contact')}
+                className="btn-primary text-xs"
+                style={{ padding: '0.4rem 1.1rem' }}
+              >
+                Hire Me
+              </button>
+            </div>
+
+            {/* Mobile toggle */}
+            <button
+              onClick={() => setMobileOpen(v => !v)}
+              className="md:hidden cursor-pointer"
+              style={{ background: 'none', border: 'none', color: '#F8F8F8', padding: '0.25rem' }}
+              aria-label="Menu"
             >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      <div
+        className="fixed inset-0 z-40 md:hidden transition-all duration-400"
+        style={{
+          background: 'rgba(5,5,5,0.97)',
+          backdropFilter: 'blur(20px)',
+          opacity: mobileOpen ? 1 : 0,
+          pointerEvents: mobileOpen ? 'all' : 'none',
+          transform: mobileOpen ? 'translateY(0)' : 'translateY(-10px)',
+          transition: 'opacity 0.3s ease, transform 0.3s ease',
+        }}
+      >
+        <div className="flex flex-col items-center justify-center h-full gap-8">
+          {navItems.map((item, i) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className="cursor-pointer transition-all duration-200"
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                fontFamily: 'Space Grotesk, sans-serif',
+                color: activeSection === item.id ? '#F59E0B' : '#A0A0A0',
+                background: 'none',
+                border: 'none',
+                transitionDelay: `${i * 40}ms`,
+                transform: mobileOpen ? 'translateY(0)' : 'translateY(20px)',
+                opacity: mobileOpen ? 1 : 0,
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       </div>
-
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-background border-b border-border">
-          <div className="px-4 pt-2 pb-4 space-y-2">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection(item.href);
-                }}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-accent transition-colors"
-              >
-                {item.name}
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
+    </>
   );
 }

@@ -1,77 +1,118 @@
-'use client';
+﻿'use client';
 
-import { Github, Linkedin, Mail, Heart } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="bg-muted/50 border-t border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <footer style={{ background: '#050505', borderTop: '1px solid #1F1F1F' }}>
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+
+          {/* Left */}
           <div>
-            <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              Portfolio
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Full-stack developer passionate about creating elegant solutions to complex problems.
+            <p
+              style={{
+                fontSize: '1.2rem',
+                fontWeight: 700,
+                fontFamily: 'Space Grotesk, sans-serif',
+                color: '#F8F8F8',
+                letterSpacing: '-0.02em',
+                marginBottom: '0.4rem',
+              }}
+            >
+              Chalana Prabhashwara
+            </p>
+            <p className="text-label" style={{ color: '#555' }}>
+              Software Engineer · Sri Lanka · {new Date().getFullYear()}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              {['Home', 'Expertise', 'Career', 'Projects', 'Contact'].map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item.toLowerCase()}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.querySelector(`#${item.toLowerCase()}`)?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Center: links */}
+          <div className="flex items-center gap-6">
+            {['About', 'Skills', 'Experience', 'Work', 'Contact'].map((item, i) => {
+              const ids = ['about', 'expertise', 'career', 'projects', 'contact'];
+              return (
+                <button
+                  key={item}
+                  onClick={() => document.getElementById(ids[i])?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-label cursor-pointer"
+                  style={{
+                    color: '#555',
+                    background: 'none',
+                    border: 'none',
+                    transition: 'color 0.2s ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#F59E0B'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#555'}
+                >
+                  {item}
+                </button>
+              );
+            })}
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Connect</h3>
-            <div className="flex gap-4">
+          {/* Right: social + back to top */}
+          <div className="flex items-center gap-4">
+            {[
+              { icon: Github, href: 'https://github.com/GMchalana' },
+              { icon: Linkedin, href: 'https://www.linkedin.com/in/chalana-prabhashwara/' },
+              { icon: Mail, href: 'mailto:gmchalanaprabhashwara@gmail.com' },
+            ].map(({ icon: Icon, href }, i) => (
               <a
-                href="https://github.com/GMchalana"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="GitHub Profile"
+                key={i}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid #1F1F1F',
+                  borderRadius: '3px',
+                  color: '#555',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = '#F59E0B';
+                  (e.currentTarget as HTMLElement).style.color = '#F59E0B';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = '#1F1F1F';
+                  (e.currentTarget as HTMLElement).style.color = '#555';
+                }}
               >
-                <Github className="h-5 w-5" />
+                <Icon size={14} />
               </a>
-              <a
-                href="https://www.linkedin.com/in/chalana-prabhashwara/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="LinkedIn Profile"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href="mailto:gmchalanaprabhashwara@gmail.com"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                aria-label="Send Email"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-        </div>
+            ))}
 
-        <div className="pt-8 border-t border-border">
-          <p className="text-center text-sm text-muted-foreground flex items-center justify-center gap-1">
-            © {new Date().getFullYear()} Portfolio website. Made by Chalana Prabhashwara.
-          </p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              style={{
+                width: '34px',
+                height: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px solid #F59E0B',
+                borderRadius: '3px',
+                color: '#F59E0B',
+                background: 'rgba(245,158,11,0.05)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.12)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(245,158,11,0.05)';
+              }}
+              aria-label="Back to top"
+            >
+              <ArrowUp size={14} />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

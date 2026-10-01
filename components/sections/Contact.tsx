@@ -1,246 +1,262 @@
-'use client';
+﻿'use client';
 
-import { useState } from 'react';
-import { Mail, MapPin, Phone, Send, MessageCircle, User, ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useRef, useEffect } from 'react';
+import { ArrowUpRight, Send, Mail, MapPin, Phone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
 
-    // Simulate form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
     setTimeout(() => {
-      toast({
-        title: 'Message sent successfully! 🎉',
-        description: 'Thank you for reaching out. I\'ll get back to you within 24 hours.',
-      });
-      setFormData({ name: '', email: '', message: '' });
-      setIsSubmitting(false);
+      toast({ title: 'Message sent!', description: "I'll reply within 24 hours." });
+      setForm({ name: '', email: '', message: '' });
+      setSubmitting(false);
     }, 2000);
   };
 
-  const contactMethods = [
-    {
-      icon: Mail,
-      title: 'Email',
-      description: 'gmchalanaprabhashwara@gmail.com',
-      gradient: 'from-blue-500 to-cyan-500',
-      href: 'mailto:gmchalanaprabhashwara@gmail.com',
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      description: '+94 71 66 15 228',
-      gradient: 'from-green-500 to-emerald-500',
-      href: 'tel:+94716615228',
-    },
-    {
-      icon: MapPin,
-      title: 'Location',
-      description: 'Eheliyagoda, Sri Lanka',
-      gradient: 'from-purple-500 to-pink-500',
-      href: 'https://maps.google.com/?q=Eheliyagoda,Sri+Lanka',
-    },
-  ];
+  const inputBase: React.CSSProperties = {
+    width: '100%',
+    background: '#0C0C0C',
+    border: '1px solid #1F1F1F',
+    borderRadius: '3px',
+    padding: '0.85rem 1rem',
+    color: '#F8F8F8',
+    fontSize: '0.9rem',
+    fontFamily: 'Inter, sans-serif',
+    outline: 'none',
+    transition: 'border-color 0.2s ease',
+  };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20 dark:to-muted/10" />
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/20 dark:bg-blue-600/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-200/15 dark:bg-cyan-600/10 rounded-full blur-3xl animate-pulse-medium" />
-      <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-purple-200/10 dark:bg-purple-600/5 rounded-full blur-2xl animate-pulse-fast" />
+    <section id="contact" ref={ref} style={{ background: '#050505', borderBottom: '1px solid #1F1F1F' }}>
+      {/* Header */}
+      <div
+        className="max-w-7xl mx-auto px-6 lg:px-12"
+        style={{ borderBottom: '1px solid #1F1F1F', paddingTop: '5rem', paddingBottom: '3rem' }}
+      >
+        <p className="section-num mb-3">05 — Contact</p>
+        <h2
+          className="text-headline"
+          style={{
+            color: '#F8F8F8',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
+          }}
+        >
+          Let&apos;s Work<br />
+          <span className="accent-text">Together</span>
+        </h2>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-muted/50 dark:bg-muted/20 rounded-2xl border border-border/50 mb-6">
-            <MessageCircle className="h-5 w-5 text-blue-500" />
-            <span className="text-sm font-medium text-muted-foreground">Let's Connect</span>
-            <MessageCircle className="h-5 w-5 text-blue-500" />
-          </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground dark:from-blue-200 dark:to-cyan-200 bg-clip-text text-transparent">
-            Get In Touch
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Ready to bring your ideas to life? Let's collaborate and create something extraordinary together. 
-            I'm always excited to discuss new projects and opportunities.
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2" style={{ borderBottom: '1px solid #1F1F1F' }}>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Contact Methods */}
-          <div className="lg:col-span-2 space-y-6">
-            {contactMethods.map((method, index) => (
-              <a
-                key={index}
-                href={method.href}
-                target={method.href.startsWith('http') ? '_blank' : undefined}
-                rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                className="block group"
-              >
-                <Card className="relative overflow-hidden bg-card/80 dark:bg-card/90 backdrop-blur-sm border border-border/50 rounded-2xl hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-border/80 dark:hover:border-border/60">
-                  {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${method.gradient} opacity-0 group-hover:opacity-5 dark:group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  <CardHeader className="relative z-10">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 bg-gradient-to-r ${method.gradient} rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
-                        <method.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 dark:from-white dark:to-white/80 bg-clip-text text-transparent">
-                          {method.title}
-                        </CardTitle>
-                        <CardDescription className="text-muted-foreground text-base">
-                          {method.description}
-                        </CardDescription>
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground transform group-hover:translate-x-1 transition-transform duration-300" />
-                    </div>
-                  </CardHeader>
-                </Card>
-              </a>
-            ))}
-
-            {/* Additional Info Card */}
-            <Card className="bg-muted/40 dark:bg-muted/20 backdrop-blur-sm border border-border/50 rounded-2xl">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Sparkles className="h-5 w-5 text-yellow-500" />
-                  <CardTitle className="text-lg">Quick Response</CardTitle>
-                </div>
-                <CardDescription className="text-muted-foreground leading-relaxed">
-                  I typically respond within a few hours. For urgent matters, feel free to call or WhatsApp me directly.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-3">
-            <Card className="relative bg-card/80 dark:bg-card/90 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
-              {/* Form Background Pattern */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-transparent opacity-50" />
-              
-              <CardHeader className="relative z-10 pb-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
-                    <Send className="h-5 w-5 text-white" />
-                  </div>
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 dark:from-white dark:to-white/80 bg-clip-text text-transparent">
-                    Send a Message
-                  </CardTitle>
-                </div>
-                <CardDescription className="text-muted-foreground text-base">
-                  Fill out the form below and I'll get back to you as soon as possible. Let's discuss your project requirements and how we can work together.
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="relative z-10">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <label htmlFor="name" className="text-sm font-medium text-foreground/80 flex items-center gap-2">
-                        <User className="h-4 w-4 text-blue-500" />
-                        Full Name
-                      </label>
-                      <Input
-                        id="name"
-                        placeholder="John Doe"
-                        value={formData.name}
-                        onChange={(e) =>
-                          setFormData({ ...formData, name: e.target.value })
-                        }
-                        required
-                        className="bg-background/50 dark:bg-background/30 border-border/50 focus:border-blue-500/50 transition-all duration-300 rounded-xl h-12"
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <label htmlFor="email" className="text-sm font-medium text-foreground/80 flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-green-500" />
-                        Email Address
-                      </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        required
-                        className="bg-background/50 dark:bg-background/30 border-border/50 focus:border-green-500/50 transition-all duration-300 rounded-xl h-12"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <label htmlFor="message" className="text-sm font-medium text-foreground/80 flex items-center gap-2">
-                      <MessageCircle className="h-4 w-4 text-purple-500" />
-                      Your Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      placeholder="Tell me about your project, timeline, budget, and any specific requirements you have..."
-                      rows={6}
-                      value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
-                      required
-                      className="bg-background/50 dark:bg-background/30 border-border/50 focus:border-purple-500/50 transition-all duration-300 rounded-xl resize-none"
-                    />
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full h-12 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:scale-105 group"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Sending Message...
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <Send className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                        Send Message
-                        <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-300" />
-                      </div>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-
-              {/* Gradient Border Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-transparent" />
-            </Card>
-          </div>
-        </div>
-
-        {/* Footer CTA */}
-        <div className="text-center mt-16 pt-12 border-t border-border/30">
-          <div className="inline-flex items-center gap-4 px-8 py-4 bg-muted/40 dark:bg-muted/20 rounded-2xl border border-border/50">
-            <Sparkles className="h-6 w-6 text-yellow-500" />
-            <p className="text-lg text-muted-foreground">
-              Let's create something amazing together! 💫
+          {/* Left: big email + info */}
+          <div
+            className="py-16 lg:pr-16"
+            style={{
+              borderRight: '1px solid #1F1F1F',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateX(0)' : 'translateX(-20px)',
+              transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
+              transitionDelay: '200ms',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '0.9rem',
+                color: '#6B6B6B',
+                fontFamily: 'Inter, sans-serif',
+                lineHeight: 1.8,
+                marginBottom: '3rem',
+                maxWidth: '380px',
+              }}
+            >
+              Have a project in mind? Looking to hire or collaborate?
+              Feel free to reach out — I&apos;m currently open to new opportunities.
             </p>
-            <Sparkles className="h-6 w-6 text-yellow-500" />
+
+            {/* Big email link */}
+            <a
+              href="mailto:gmchalanaprabhashwara@gmail.com"
+              className="group block mb-10"
+              style={{ textDecoration: 'none' }}
+            >
+              <p className="text-label mb-2" style={{ color: '#555' }}>Email me at</p>
+              <p
+                style={{
+                  fontSize: 'clamp(0.95rem, 2.2vw, 1.4rem)',
+                  fontWeight: 600,
+                  fontFamily: 'Space Grotesk, sans-serif',
+                  color: '#F8F8F8',
+                  letterSpacing: '-0.02em',
+                  transition: 'color 0.2s ease',
+                  wordBreak: 'break-all',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+                onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#F59E0B'}
+                onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#F8F8F8'}
+              >
+                gmchalanaprabhashwara@gmail.com
+                <ArrowUpRight size={18} style={{ flexShrink: 0 }} />
+              </p>
+              <div
+                style={{
+                  height: '1px',
+                  background: '#1F1F1F',
+                  marginTop: '0.75rem',
+                  transformOrigin: 'left',
+                  transition: 'background 0.3s ease',
+                }}
+              />
+            </a>
+
+            {/* Contact info cards */}
+            <div className="space-y-4">
+              {[
+                { icon: Phone, label: 'Phone', value: '+94 71 66 15 228', href: 'tel:+94716615228' },
+                { icon: MapPin, label: 'Location', value: 'Eheliyagoda, Sri Lanka', href: '#' },
+              ].map(({ icon: Icon, label, value, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="flex items-center gap-4 group"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      border: '1px solid #1F1F1F',
+                      borderRadius: '3px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#555',
+                      transition: 'all 0.2s ease',
+                      flexShrink: 0,
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = '#F59E0B';
+                      (e.currentTarget as HTMLElement).style.color = '#F59E0B';
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.borderColor = '#1F1F1F';
+                      (e.currentTarget as HTMLElement).style.color = '#555';
+                    }}
+                  >
+                    <Icon size={14} />
+                  </div>
+                  <div>
+                    <p className="text-label" style={{ color: '#555', marginBottom: '1px' }}>{label}</p>
+                    <p style={{ fontSize: '0.9rem', color: '#A0A0A0', fontFamily: 'Inter, sans-serif' }}>{value}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Form */}
+          <div
+            className="py-16 lg:pl-16"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateX(0)' : 'translateX(20px)',
+              transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
+              transitionDelay: '350ms',
+            }}
+          >
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="text-label block mb-2" style={{ color: '#555' }}>Name</label>
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    value={form.name}
+                    onChange={e => setForm({ ...form, name: e.target.value })}
+                    required
+                    style={inputBase}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = '#F59E0B'}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = '#1F1F1F'}
+                  />
+                </div>
+                <div>
+                  <label className="text-label block mb-2" style={{ color: '#555' }}>Email</label>
+                  <input
+                    type="email"
+                    placeholder="john@example.com"
+                    value={form.email}
+                    onChange={e => setForm({ ...form, email: e.target.value })}
+                    required
+                    style={inputBase}
+                    onFocus={e => (e.target as HTMLInputElement).style.borderColor = '#F59E0B'}
+                    onBlur={e => (e.target as HTMLInputElement).style.borderColor = '#1F1F1F'}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-label block mb-2" style={{ color: '#555' }}>Message</label>
+                <textarea
+                  placeholder="Tell me about your project, timeline, budget..."
+                  rows={6}
+                  value={form.message}
+                  onChange={e => setForm({ ...form, message: e.target.value })}
+                  required
+                  style={{ ...inputBase, resize: 'none' }}
+                  onFocus={e => (e.target as HTMLTextAreaElement).style.borderColor = '#F59E0B'}
+                  onBlur={e => (e.target as HTMLTextAreaElement).style.borderColor = '#1F1F1F'}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="btn-primary w-full justify-center"
+                style={{ opacity: submitting ? 0.7 : 1 }}
+              >
+                {submitting ? (
+                  <>
+                    <div
+                      style={{
+                        width: '14px',
+                        height: '14px',
+                        border: '2px solid rgba(5,5,5,0.3)',
+                        borderTopColor: '#050505',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite',
+                      }}
+                    />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send size={14} />
+                    Send Message
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
       </div>

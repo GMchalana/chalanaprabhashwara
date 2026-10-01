@@ -1,279 +1,304 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ExternalLink, Github, Eye, ArrowRight, Sparkles, FolderGit2 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 
 const projects = [
   {
-    title: 'PDF Converter',
-    description: 'A web application that converts various file formats to PDF and vice versa, with support for batch processing and real-time progress tracking.',
-    image: 'pdfconverter.png',
-    tags: ['Next.js', 'PDFJS', 'TailwindCSS', 'TypeScript'],
-    category: 'Web Application',
-    gradient: 'from-blue-500 to-cyan-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
-    title: 'ATM Security System',
-    description: 'IoT and ML based mobile application for improve security and efficiency of ATM machines with real-time monitoring and predictive analytics.',
-    image: 'mock01.png',
-    tags: ['Flutter', 'IoT', 'Machine Learning', 'Firebase', 'Python'],
-    category: 'Mobile & IoT',
-    gradient: 'from-green-500 to-emerald-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
-    title: 'Testing PC',
-    description: 'Web application for monitor chemical testing orders and control all orders in ITUM with advanced reporting and analytics dashboard.',
-    image: 'testingpc.png',
-    tags: ['React', 'NodeJS', 'SQL', 'Express'],
-    category: 'Web Application',
-    gradient: 'from-purple-500 to-pink-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
-    title: 'Dye Lab Industrial Software',
-    description: 'Desktop application for managing dye lab operations in textile industries, including inventory management and order tracking with barcode support.',
-    image: 'mock06.png',
-    tags: ['Java', 'Swing', 'MySQL', 'Desktop'],
-    category: 'Desktop Application',
-    gradient: 'from-orange-500 to-red-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
-    title: 'DennamLK Portfolio',
-    description: 'AI-powered portfolio website for DennamLK showcasing projects and skills with dynamic content generation and interactive animations.',
-    image: 'dennamLK.png',
-    tags: ['Next.js', 'OpenAI', 'EmailJS', 'Framer Motion'],
-    category: 'Portfolio Website',
-    gradient: 'from-indigo-500 to-purple-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
-    title: 'Weather Forecast App',
-    description: 'Beautiful weather application with location-based forecasts, interactive maps, and detailed weather analytics with 7-day predictions.',
-    image: 'weather.png',
-    tags: ['NextJs', 'Open Weather API', 'Chart.js'],
-    category: 'Web Application',
-    gradient: 'from-sky-500 to-blue-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
-  },
-  {
+    num: '01',
     title: 'Cloud POS System',
-    description: 'Fully featured cloud-based POS system for retail businesses with inventory management, sales analytics, and multi-store support.',
+    category: 'SaaS · Web Application',
+    description: 'Fully featured cloud-based POS for retail businesses with inventory management, real-time analytics, and multi-store support.',
     image: 'cloudpos.png',
-    tags: ['NextJs', 'NodeJS', 'MongoDB', 'Cloudflare', 'Vercel'],
-    category: 'SaaS Application',
-    gradient: 'from-teal-500 to-green-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
+    tags: ['Next.js', 'Node.js', 'MongoDB', 'Cloudflare'],
+    featured: true,
   },
   {
+    num: '02',
+    title: 'ATM Security System',
+    category: 'Mobile · IoT · ML',
+    description: 'IoT and machine learning based system improving ATM security with real-time monitoring and predictive analytics.',
+    image: 'mock01.png',
+    tags: ['Flutter', 'Python', 'Firebase', 'ML'],
+    featured: true,
+  },
+  {
+    num: '03',
+    title: 'PDF Converter',
+    category: 'Web Application',
+    description: 'Batch file-to-PDF conversion with real-time progress tracking and support for multiple input formats.',
+    image: 'pdfconverter.png',
+    tags: ['Next.js', 'PDFJS', 'TypeScript'],
+    featured: false,
+  },
+  {
+    num: '04',
     title: 'Local POS System',
-    description: 'Fully featured Local POS system for retail businesses with inventory management, sales analytics, and offline capability.',
+    category: 'Desktop · Offline',
+    description: 'Fully offline POS system with inventory management, sales analytics, and SQLite-backed data persistence.',
     image: 'localpos.png',
-    tags: ['ElectronJS', 'SQLite', 'Desktop'],
-    category: 'Desktop Application',
-    gradient: 'from-amber-500 to-yellow-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
+    tags: ['ElectronJS', 'SQLite', 'React'],
+    featured: false,
   },
   {
-    title: 'Gemirasa Spices Website',
-    description: 'Portfolio website for Gemirasa spices showcasing products, company information with e-commerce capabilities and product catalog.',
-    image: 'gemirasaSpices.png',
-    tags: ['NextJs', 'E-commerce', 'Responsive'],
+    num: '05',
+    title: 'DennamLK Portfolio',
+    category: 'Portfolio Website',
+    description: 'AI-powered portfolio site with dynamic content generation, interactive animations, and EmailJS integration.',
+    image: 'dennamLK.png',
+    tags: ['Next.js', 'OpenAI', 'Framer Motion'],
+    featured: false,
+  },
+  {
+    num: '06',
+    title: 'Gemirasa Spices',
     category: 'Business Website',
-    gradient: 'from-rose-500 to-pink-500',
-    // github: 'https://github.com',
-    // demo: 'https://example.com',
+    description: 'E-commerce ready business website showcasing products and company info with a fully responsive layout.',
+    image: 'gemirasaSpices.png',
+    tags: ['Next.js', 'E-commerce', 'Responsive'],
+    featured: false,
+  },
+  {
+    num: '07',
+    title: 'Testing PC',
+    category: 'Web Application',
+    description: 'Chemical testing order management system for ITUM with advanced reporting and analytics dashboard.',
+    image: 'testingpc.png',
+    tags: ['React', 'Node.js', 'SQL'],
+    featured: false,
+  },
+  {
+    num: '08',
+    title: 'Weather Forecast App',
+    category: 'Web Application',
+    description: 'Location-based weather application with interactive maps and 7-day forecasts powered by Open Weather API.',
+    image: 'weather.png',
+    tags: ['Next.js', 'Chart.js', 'API'],
+    featured: false,
   },
 ];
 
 export function Projects() {
-  const [visibleCards, setVisibleCards] = useState<boolean[]>([]);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            projects.forEach((_, index) => {
-              setTimeout(() => {
-                setVisibleCards(prev => {
-                  const newVisible = [...prev];
-                  newVisible[index] = true;
-                  return newVisible;
-                });
-              }, index * 100);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.05 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
   }, []);
 
-  return (
-    <section id="projects" className="py-24 relative overflow-hidden" ref={sectionRef}>
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/20 dark:to-muted/10" />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-200/20 dark:bg-blue-600/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-200/15 dark:bg-purple-600/10 rounded-full blur-3xl animate-pulse-medium" />
-      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-green-200/10 dark:bg-green-600/5 rounded-full blur-2xl animate-pulse-fast" />
+  const featured = projects.filter(p => p.featured);
+  const rest = projects.filter(p => !p.featured);
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-muted/50 dark:bg-muted/20 rounded-2xl border border-border/50 mb-6">
-            <FolderGit2 className="h-5 w-5 text-blue-500" />
-            <span className="text-sm font-medium text-muted-foreground">Project Portfolio</span>
-            <FolderGit2 className="h-5 w-5 text-blue-500" />
+  return (
+    <section id="projects" ref={ref} style={{ background: '#050505', borderBottom: '1px solid #1F1F1F' }}>
+      {/* Header */}
+      <div
+        className="max-w-7xl mx-auto px-6 lg:px-12"
+        style={{ borderBottom: '1px solid #1F1F1F', paddingTop: '5rem', paddingBottom: '3rem' }}
+      >
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="section-num mb-3">04 — Work</p>
+            <h2
+              className="text-headline"
+              style={{
+                color: '#F8F8F8',
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(30px)',
+                transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
+              }}
+            >
+              Selected<br />
+              <span className="accent-text">Projects</span>
+            </h2>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground dark:from-blue-200 dark:to-cyan-200 bg-clip-text text-transparent">
-            Personal Projects
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            A collection of innovative projects showcasing full-stack development skills, 
-            creative problem-solving, and modern technology implementations
+          <p
+            className="text-label pb-2 hidden lg:block"
+            style={{
+              color: '#555',
+              opacity: visible ? 1 : 0,
+              transition: 'opacity 0.7s ease',
+              transitionDelay: '400ms',
+            }}
+          >
+            {projects.length} Projects Total
           </p>
         </div>
+      </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+        {/* Featured 2-col grid */}
+        <div
+          className="grid grid-cols-1 lg:grid-cols-2"
+          style={{ borderBottom: '1px solid #1F1F1F' }}
+        >
+          {featured.map((p, i) => (
             <div
-              key={index}
-              className={`relative transition-all duration-700 ease-out ${
-                visibleCards[index]
-                  ? 'opacity-100 translate-y-0 scale-100'
-                  : 'opacity-0 translate-y-10 scale-95'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
+              key={i}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                borderRight: i === 0 ? '1px solid #1F1F1F' : 'none',
+                borderBottom: 'none',
+                padding: '3rem 0',
+                paddingRight: i === 0 ? '3rem' : '0',
+                paddingLeft: i === 1 ? '3rem' : '0',
+                cursor: 'default',
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(30px)',
+                transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1)',
+                transitionDelay: `${200 + i * 150}ms`,
+              }}
             >
-              {/* Background Glow Effect */}
-              <div className={`absolute -inset-4 bg-gradient-to-r ${project.gradient} rounded-3xl blur-xl opacity-0 group-hover:opacity-20 dark:group-hover:opacity-10 transition duration-500 ${
-                hoveredCard === index ? 'opacity-20 dark:opacity-10' : ''
-              }`} />
-
-              {/* Main Card */}
-              <Card className="relative group bg-card/80 dark:bg-card/90 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col hover:scale-105 hover:border-border/80 dark:hover:border-border/60">
-                
-                {/* Image Container */}
-                <div className="relative overflow-hidden h-48">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Image
-                    src={`/${project.image}`}
-                    alt={project.title}
-                    fill
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4 z-20">
-                    <Badge className="bg-black/80 text-white border-0 backdrop-blur-sm">
-                      {project.category}
-                    </Badge>
-                  </div>
-
-                  {/* Hover Overlay Buttons */}
-                  <div className="absolute inset-0 flex items-center justify-center gap-4 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                    {/* <Button size="sm" className="bg-white/90 text-black hover:bg-white backdrop-blur-sm">
-                      <Github className="h-4 w-4 mr-2" />
-                      Code
-                    </Button>
-                    <Button size="sm" className="bg-white/90 text-black hover:bg-white backdrop-blur-sm">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Demo
-                    </Button> */}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col">
-                  <CardHeader className="p-0 mb-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 dark:from-white dark:to-white/80 bg-clip-text text-transparent">
-                        {project.title}
-                      </CardTitle>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground transform group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0 mt-1" />
-                    </div>
-                    <CardDescription className="text-muted-foreground leading-relaxed text-sm">
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  {/* Tags */}
-                  <CardContent className="p-0 mb-4 flex-1">
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag, tagIndex) => (
-                        <Badge 
-                          key={tagIndex} 
-                          variant="secondary"
-                          className="text-xs font-medium bg-muted/60 dark:bg-muted/40 text-muted-foreground border border-border/30 hover:border-border/50 hover:bg-muted/80 dark:hover:bg-muted/60 transition-all duration-300"
-                        >
-                          {tag}
-                        </Badge>
+              {/* Image */}
+              <div
+                style={{
+                  position: 'relative',
+                  height: '260px',
+                  overflow: 'hidden',
+                  borderRadius: '2px',
+                  marginBottom: '1.5rem',
+                  border: '1px solid #1F1F1F',
+                }}
+                className="group"
+              >
+                <Image
+                  src={`/${p.image}`}
+                  alt={p.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end"
+                  style={{ background: 'linear-gradient(to top, rgba(5,5,5,0.9) 0%, transparent 60%)' }}
+                >
+                  <div className="p-5 w-full">
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.tags.map((t, ti) => (
+                        <span key={ti} className="tag-accent">{t}</span>
                       ))}
                     </div>
-                  </CardContent>
-
-                  {/* Footer */}
-                  <CardFooter className="p-0 mt-auto">
-                    <div className="flex gap-2 w-full">
-                      {/* <Button size="sm" variant="outline" className="flex-1 gap-2" asChild>
-                        <a href={project.github} target="_blank" rel="noopener noreferrer">
-                          <Github className="h-4 w-4" />
-                          Code
-                        </a>
-                      </Button>
-                      <Button size="sm" className="flex-1 gap-2 bg-gradient-to-r from-blue-600 to-cyan-600" asChild>
-                        <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                          <Eye className="h-4 w-4" />
-                          Live Demo
-                        </a>
-                      </Button> */}
-                    </div>
-                  </CardFooter>
+                  </div>
                 </div>
+                {/* Number overlay */}
+                <div
+                  className="absolute top-4 right-4"
+                  style={{
+                    fontFamily: 'Space Grotesk, sans-serif',
+                    fontSize: '4rem',
+                    fontWeight: 700,
+                    color: 'rgba(245,158,11,0.08)',
+                    lineHeight: 1,
+                    userSelect: 'none',
+                  }}
+                >
+                  {p.num}
+                </div>
+              </div>
 
-                {/* Gradient Accent */}
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${project.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
-              </Card>
+              {/* Info */}
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p className="text-label mb-2" style={{ color: '#F59E0B' }}>{p.category}</p>
+                  <h3
+                    style={{
+                      fontSize: '1.4rem',
+                      fontWeight: 700,
+                      fontFamily: 'Space Grotesk, sans-serif',
+                      letterSpacing: '-0.02em',
+                      color: '#F8F8F8',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
+                    {p.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: '0.85rem',
+                      color: '#6B6B6B',
+                      lineHeight: 1.7,
+                      fontFamily: 'Inter, sans-serif',
+                    }}
+                  >
+                    {p.description}
+                  </p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Footer CTA */}
-        <div className="text-center mt-16 pt-12 border-t border-border/30">
-          <div className="inline-flex items-center gap-4 px-8 py-4 bg-muted/40 dark:bg-muted/20 rounded-2xl border border-border/50">
-            <Sparkles className="h-6 w-6 text-yellow-500" />
-            <p className="text-lg text-muted-foreground">
-              Interested in collaborating? Let's build something amazing together!
-            </p>
-            <Sparkles className="h-6 w-6 text-yellow-500" />
+        {/* Rest — compact list */}
+        {rest.map((p, i) => (
+          <div
+            key={i}
+            onMouseEnter={() => setHovered(100 + i)}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              borderBottom: '1px solid #1F1F1F',
+              padding: '1.75rem 0',
+              display: 'grid',
+              gridTemplateColumns: '3rem 1fr auto',
+              gap: '1.5rem 2rem',
+              alignItems: 'center',
+              cursor: 'default',
+              transition: 'background 0.3s ease',
+              background: hovered === 100 + i ? 'rgba(245,158,11,0.015)' : 'transparent',
+              marginLeft: '-1.5rem',
+              marginRight: '-1.5rem',
+              paddingLeft: '1.5rem',
+              paddingRight: '1.5rem',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateX(0)' : 'translateX(-15px)',
+              transitionProperty: 'opacity, transform, background',
+              transitionDuration: '0.7s, 0.7s, 0.3s',
+              transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)',
+              transitionDelay: `${300 + i * 80}ms, ${300 + i * 80}ms, 0ms`,
+            }}
+          >
+            <span className="section-num" style={{ color: '#2A2A2A' }}>{p.num}</span>
+
+            <div>
+              <div className="flex items-center gap-3 mb-1 flex-wrap">
+                <h3
+                  style={{
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    fontFamily: 'Space Grotesk, sans-serif',
+                    color: hovered === 100 + i ? '#F59E0B' : '#F8F8F8',
+                    transition: 'color 0.3s ease',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {p.title}
+                </h3>
+                <span className="text-label" style={{ color: '#555' }}>{p.category}</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {p.tags.map((t, ti) => (
+                  <span key={ti} className="tag">{t}</span>
+                ))}
+              </div>
+            </div>
+
+            <ArrowUpRight
+              size={16}
+              style={{
+                color: hovered === 100 + i ? '#F59E0B' : '#2A2A2A',
+                transition: 'color 0.3s ease',
+                flexShrink: 0,
+              }}
+            />
           </div>
-        </div>
+        ))}
       </div>
     </section>
   );

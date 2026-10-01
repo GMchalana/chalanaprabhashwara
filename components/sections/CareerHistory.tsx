@@ -1,240 +1,389 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Briefcase, Calendar, Star, MapPin, ArrowRight } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useMotionValueEvent, MotionValue } from 'framer-motion';
 
-const careerHistory = [
+interface Job {
+  num: string;
+  company: string;
+  role: string;
+  period: string;
+  location: string;
+  type: string;
+  highlights: string[];
+  tech: string[];
+  renderLogo: () => JSX.Element;
+}
+
+const jobs: Job[] = [
   {
+    num: '01',
     company: 'Axonall Global',
-    position: 'Software Engineer',
-    period: '2025 July - Present',
+    role: 'Software Engineer',
+    period: 'Jul 2025 — Present',
     location: 'Colombo, Sri Lanka',
-    description:
-      'Developed and maintained multiple client-facing web applications. Collaborated with design team to implement pixel-perfect interfaces.',
-    achievements: [
-      'Worked with sabre API and successfully integrated booking features',
-      'Build method for calculating carbon footprint of bookings',
-      'Gathered data for calculating carbon footprint from various sources and integrated them into a cohesive system',
+    type: 'Full-time',
+    highlights: [
+      'Integrated Sabre booking API and carbon footprint calculation system',
+      'Built responsive client-facing web applications with React & Next.js',
+      'Developed carbon data aggregation pipeline from multiple external sources',
+      'Engineered cloud infrastructure and microservices deployed on AWS',
     ],
-    tech: ['React', 'Next.js', 'Node.js', 'TypeScript', 'AWS'],
+    tech: ['React', 'Next.js', 'TypeScript', 'Node.js', 'AWS', 'REST APIs'],
+    renderLogo: () => (
+      <svg viewBox="0 0 40 40" fill="none" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M20 7L32 31H26L23.5 25H16.5L14 31H8L20 7Z"
+          stroke="#F8F8F8"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path d="M18 21H22" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="20" cy="7" r="2" fill="#F59E0B" />
+      </svg>
+    ),
   },
   {
+    num: '02',
     company: 'DennamLK (Pvt) Ltd',
-    position: 'Software Engineer / Software Architect',
-    period: '2025 January - Present (Part Time)',
+    role: 'Software Engineer / Architect',
+    period: 'Jan 2025 — Present',
     location: 'Remote',
-    description:
-      'Developed and maintained multiple client-facing web applications with various stacks. Collaborated with design team to implement pixel-perfect interfaces.',
-    achievements: [
-      'Built 15+ responsive web applications',
-      'Improved code quality through testing implementation',
-      'Reduced bug reports by 40% through thorough QA',
+    type: 'Part-time',
+    highlights: [
+      'Built 15+ responsive web applications across diverse client projects',
+      'Improved code quality through systematic unit testing and QA processes',
+      'Reduced bug reports by 40% through rigorous architecture and code reviews',
+      'Designed high-performance database schemas and query structures in PostgreSQL',
     ],
-    tech: ['React', 'Angular', 'Vue.js', 'Python', 'PostgreSQL'],
+    tech: ['React', 'Angular', 'Vue.js', 'Python', 'PostgreSQL', 'TailwindCSS'],
+    renderLogo: () => (
+      <svg viewBox="0 0 40 40" fill="none" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12 9H22C28.075 9 33 13.925 33 20C33 26.075 28.075 31 22 31H12V9Z"
+          stroke="#F8F8F8"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M18 16H21C23.209 16 25 17.791 25 20C25 22.209 23.209 24 21 24H18V16Z"
+          stroke="#F59E0B"
+          strokeWidth="1.8"
+        />
+      </svg>
+    ),
   },
   {
+    num: '03',
     company: 'Agro World (Pvt) Ltd',
-    position: 'Associate Software Engineer',
-    period: '2024 August - 2025 June',
+    role: 'Associate Software Engineer',
+    period: 'Aug 2024 — Jun 2025',
     location: 'Colombo, Sri Lanka',
-    description:
-      'Focused on creating engaging user interfaces and implementing modern frontend technologies. Worked for both mobile and web applications.',
-    achievements: [
-      'Manage and planned database architecture for both internal and external projects',
-      'Introduced React, angular and Next and modern tooling to the tech stack',
-      'Collaborated devOps team to streamline deployment processes',
-      'Worked in linux environment and managed cloud infrastructure on AWS and Digital Ocean',
+    type: 'Full-time',
+    highlights: [
+      'Designed and managed database architecture for multiple production systems',
+      'Introduced React, Next.js and modern tooling to the existing tech stack',
+      'Managed cloud infrastructure on AWS and Digital Ocean with containerization',
+      'Implemented IoT telemetry interfaces for real-time agricultural data',
     ],
-    tech: ['React', 'Next.js', 'Flutter', 'AWS', 'Docker', 'Linux'],
+    tech: ['React', 'Next.js', 'Flutter', 'AWS', 'DigitalOcean', 'Docker', 'Linux'],
+    renderLogo: () => (
+      <svg viewBox="0 0 40 40" fill="none" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M31 10C31 10 23 10 18 15C13 20 13 28 13 28C13 28 21 28 26 23C31 18 31 10 31 10Z"
+          stroke="#F8F8F8"
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path d="M16 25L26 15" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+        <path d="M11 29C13 26 16 24 20 22" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    ),
   },
   {
+    num: '04',
     company: 'Efito Solutions (Pvt) Ltd',
-    position: 'Trainee Software Engineer',
-    period: '2024 February - 2025 August',
+    role: 'Trainee Software Engineer',
+    period: 'Feb 2024 — Aug 2024',
     location: 'Colombo, Sri Lanka',
-    description:
-      'Worked on several mobile applications and admin panels. Gained experience in full-stack development and cloud deployments.',
-    achievements: [
-      'Developed mobile application with flutter framework',
-      'Design and developed admin panels using React and Node.js',
-      'Collaborated development team to implement new features and fix bugs',
+    type: 'Full-time',
+    highlights: [
+      'Developed cross-platform mobile application features with Flutter framework',
+      'Designed and built administrative web dashboards using React and Node.js',
+      'Collaborated on feature implementation, bug resolution, and agile sprints',
+      'Integrated Firebase real-time database and authentication services',
     ],
     tech: ['Flutter', 'React', 'Node.js', 'MongoDB', 'Firebase'],
+    renderLogo: () => (
+      <svg viewBox="0 0 40 40" fill="none" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+        <polygon
+          points="20,7 33,14.5 33,29.5 20,37 7,29.5 7,14.5"
+          stroke="#F8F8F8"
+          strokeWidth="2"
+          fill="none"
+        />
+        <path d="M15 17H26M15 22H23M15 27H26" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    ),
   },
 ];
 
-export function CareerHistory() {
-  const [visibleItems, setVisibleItems] = useState<boolean[]>([]);
-  const sectionRef = useRef<HTMLDivElement>(null);
+interface ScreenProps {
+  job: Job;
+  index: number;
+  scrollYProgress: MotionValue<number>;
+}
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            careerHistory.forEach((_, index) => {
-              setTimeout(() => {
-                setVisibleItems(prev => {
-                  const newVisible = [...prev];
-                  newVisible[index] = true;
-                  return newVisible;
-                });
-              }, index * 200);
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+function ExperienceScreen({ job, index, scrollYProgress }: ScreenProps) {
+  // Deterministic, perfectly calibrated scroll ranges for each card
+  let opacity: MotionValue<number>;
+  let scale: MotionValue<number>;
+  let y: MotionValue<number>;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+  if (index === 0) {
+    // Card 0: starts visible, fades/scales back from 0.15 to 0.30
+    opacity = useTransform(scrollYProgress, [0, 0.15, 0.30, 0.31], [1, 1, 0, 0]);
+    scale = useTransform(scrollYProgress, [0, 0.15, 0.30, 0.31], [1, 1, 0.94, 0.94]);
+    y = useTransform(scrollYProgress, [0, 0.15, 0.30, 0.31], [0, 0, -25, -25]);
+  } else if (index === 1) {
+    // Card 1: enters 0.15-0.30, stays visible 0.30-0.45, exits 0.45-0.60
+    opacity = useTransform(scrollYProgress, [0.14, 0.15, 0.30, 0.45, 0.60, 0.61], [0, 0, 1, 1, 0, 0]);
+    scale = useTransform(scrollYProgress, [0.14, 0.15, 0.30, 0.45, 0.60, 0.61], [0.94, 0.94, 1, 1, 0.94, 0.94]);
+    y = useTransform(scrollYProgress, [0.14, 0.15, 0.30, 0.45, 0.60, 0.61], [25, 25, 0, 0, -25, -25]);
+  } else if (index === 2) {
+    // Card 2: enters 0.45-0.60, stays visible 0.60-0.75, exits 0.75-0.90
+    opacity = useTransform(scrollYProgress, [0.44, 0.45, 0.60, 0.75, 0.90, 0.91], [0, 0, 1, 1, 0, 0]);
+    scale = useTransform(scrollYProgress, [0.44, 0.45, 0.60, 0.75, 0.90, 0.91], [0.94, 0.94, 1, 1, 0.94, 0.94]);
+    y = useTransform(scrollYProgress, [0.44, 0.45, 0.60, 0.75, 0.90, 0.91], [25, 25, 0, 0, -25, -25]);
+  } else {
+    // Card 3: enters 0.75-0.90, stays visible to end 0.90-1.00
+    opacity = useTransform(scrollYProgress, [0.74, 0.75, 0.90, 1.0], [0, 0, 1, 1]);
+    scale = useTransform(scrollYProgress, [0.74, 0.75, 0.90, 1.0], [0.94, 0.94, 1, 1]);
+    y = useTransform(scrollYProgress, [0.74, 0.75, 0.90, 1.0], [25, 25, 0, 0]);
+  }
 
-    return () => observer.disconnect();
-  }, []);
+  // Ensure inactive cards are hidden and cannot block pointer interactions
+  const visibility = useTransform(opacity, (v) => (v > 0.01 ? 'visible' : 'hidden'));
+  const zIndex = useTransform(opacity, (v) => (v > 0.4 ? 20 : 10));
 
   return (
-    <section id="career" className="py-20 relative overflow-hidden" ref={sectionRef}>
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-muted/20 dark:to-muted/10" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 dark:bg-blue-600/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-200/15 dark:bg-cyan-600/10 rounded-full blur-3xl animate-pulse-medium" />
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 text-sm text-muted-foreground mb-4 px-4 py-2 bg-muted/50 dark:bg-muted/20 rounded-full">
-            <Star className="h-4 w-4 text-yellow-500" />
-            Professional Journey
-            <Star className="h-4 w-4 text-yellow-500" />
-          </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground dark:from-blue-200 dark:to-cyan-200 bg-clip-text text-transparent">
-            Career History
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            My professional growth through innovative companies and challenging projects
-          </p>
+    <motion.div
+      style={{
+        opacity,
+        scale,
+        y,
+        visibility,
+        zIndex,
+      }}
+      className="absolute inset-0 flex items-center justify-center w-full px-6 lg:px-12 pointer-events-auto"
+    >
+      <div className="w-full max-w-6xl relative">
+        {/* Background Watermark Index */}
+        <div
+          className="absolute right-0 top-1/2 -translate-y-1/2 select-none pointer-events-none text-[#121212] font-mono font-bold leading-none hidden lg:block -z-10"
+          style={{ fontSize: 'clamp(6rem, 15vw, 14rem)' }}
+        >
+          {job.num}
         </div>
 
-        <div className="relative">
-          {/* Animated Timeline Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400/50 via-cyan-400/50 to-sky-400/50 dark:from-blue-600/30 dark:via-cyan-600/30 dark:to-sky-600/30 transform md:-translate-x-1/2">
-            <div className="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-background to-transparent" />
-            <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-background to-transparent" />
+        {/* Company Header Row */}
+        <div className="flex items-start sm:items-center gap-4 sm:gap-6 mb-4 sm:mb-6">
+          {/* Clean Monochrome Dummy Logo */}
+          <div
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{
+              background: '#0E0E0E',
+              border: '1px solid #222222',
+            }}
+          >
+            {job.renderLogo()}
           </div>
 
-          <div className="space-y-16">
-            {careerHistory.map((item, index) => (
-              <div
-                key={index}
-                className={`relative transition-all duration-700 ease-out ${
-                  visibleItems[index]
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-10'
-                }`}
+          <div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <h3
+                className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#F8F8F8]"
+                style={{ fontFamily: 'Space Grotesk, sans-serif' }}
               >
-                <div className={`flex flex-col md:flex-row items-start gap-8 ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}>
-                  
-                  {/* Company Info Side */}
-                  <div className="md:w-5/12 md:px-8">
-                    <div className={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'} ml-12 md:ml-0`}>
-                      {/* Period Badge */}
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 dark:bg-blue-500/20 rounded-full text-sm text-blue-600 dark:text-blue-400 mb-3 border border-blue-200/50 dark:border-blue-500/30">
-                        <Calendar className="h-3 w-3" />
-                        {item.period}
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground to-muted-foreground dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                        {item.position}
-                      </h3>
-                      
-                      <div className="flex items-center gap-2 mb-3">
-                        <p className="text-lg font-semibold text-primary">{item.company}</p>
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
-                          {item.location}
-                        </div>
-                      </div>
+                {job.company}
+              </h3>
+              <span className="tag-accent">{job.type}</span>
+            </div>
 
-                      {/* Tech Stack Pills */}
-                      <div className={`flex flex-wrap gap-1.5 mt-4 ${index % 2 === 0 ? 'md:justify-end' : 'md:justify-start'}`}>
-                        {item.tech.map((tech, i) => (
-                          <span
-                            key={i}
-                            className="px-2 py-1 text-xs bg-muted/60 dark:bg-muted/40 text-muted-foreground rounded-md border border-border/50"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs sm:text-sm">
+              <span className="text-[#F59E0B] font-medium font-sans">{job.role}</span>
+              <span className="text-[#444] hidden sm:inline">/</span>
+              <span className="text-[#888] font-mono">{job.period}</span>
+              <span className="text-[#444] hidden sm:inline">/</span>
+              <span className="text-[#888] font-sans">{job.location}</span>
+            </div>
+          </div>
+        </div>
 
-                  {/* Timeline Dot with Animation */}
-                  <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transform md:-translate-x-1/2 border-4 border-background dark:border-gray-900 z-20 shadow-lg">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 animate-ping opacity-20" />
-                  </div>
+        {/* Minimal Divider */}
+        <div className="w-full h-[1px] bg-[#1F1F1F] my-4 sm:my-6" />
 
-                  {/* Content Card Side */}
-                  <div className="md:w-7/12 md:px-8 ml-12 md:ml-0">
-                    <div className="group relative">
-                      {/* Card Glow Effect */}
-                      <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
-                      
-                      {/* Main Card */}
-                      <div className="relative bg-card/80 dark:bg-card/90 border border-border/50 rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 backdrop-blur-sm group-hover:border-blue-300/30 dark:group-hover:border-blue-500/30 group-hover:scale-[1.02]">
-                        <div className="flex items-start gap-3 mb-4">
-                          <div className="p-2 bg-blue-500/10 dark:bg-blue-500/20 rounded-lg">
-                            <Briefcase className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                          </div>
-                          <p className="text-muted-foreground leading-relaxed flex-1">
-                            {item.description}
-                          </p>
-                        </div>
+        {/* Two-Column Editorial Details */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+          {/* Key Deliverables / Highlights */}
+          <div className="lg:col-span-8">
+            <p className="text-[11px] uppercase tracking-widest text-[#555] font-mono mb-3 sm:mb-4">
+              Key Contributions & Highlights
+            </p>
+            <ul className="space-y-2.5 sm:space-y-3">
+              {job.highlights.map((h, hi) => (
+                <li key={hi} className="flex items-start gap-3">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                    style={{ background: '#F59E0B' }}
+                  />
+                  <span
+                    className="text-[#B0B0B0] text-sm sm:text-base leading-relaxed font-sans"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
+                  >
+                    {h}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                        <div className="space-y-3">
-                          <h4 className="font-semibold text-sm text-foreground/80 flex items-center gap-2">
-                            <ArrowRight className="h-4 w-4 text-green-500" />
-                            Key Achievements
-                          </h4>
-                          <ul className="space-y-2.5">
-                            {item.achievements.map((achievement, i) => (
-                              <li 
-                                key={i} 
-                                className="flex items-start gap-3 text-sm group/achievement"
-                              >
-                                <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0 group-hover/achievement:scale-125 transition-transform duration-200" />
-                                <span className="text-muted-foreground leading-relaxed group-hover/achievement:text-foreground/90 transition-colors duration-200">
-                                  {achievement}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+          {/* Tech Stack Column */}
+          <div className="lg:col-span-4">
+            <p className="text-[11px] uppercase tracking-widest text-[#555] font-mono mb-3 sm:mb-4">
+              Technologies & Tools
+            </p>
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              {job.tech.map((t, ti) => (
+                <span key={ti} className="tag">
+                  {t}
+                </span>
+              ))}
+            </div>
 
-                        {/* Hover Border Animation */}
-                        <div className="absolute inset-0 rounded-xl border-2 border-transparent bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-sky-500/0 group-hover:from-blue-500/10 group-hover:via-cyan-500/10 group-hover:to-sky-500/10 transition-all duration-500" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Role index meta */}
+            <div className="mt-6 pt-4 border-t border-[#1A1A1A] text-xs font-mono text-[#555]">
+              <span className="text-[#F59E0B]">{job.num}</span> of 04 · {job.type} Position
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
-                {/* Connecting Line between items */}
-                {index < careerHistory.length - 1 && (
-                  <div className="absolute left-4 md:left-1/2 top-full w-0.5 h-8 bg-gradient-to-b from-cyan-400/30 to-blue-400/30 dark:from-cyan-600/20 dark:to-blue-600/20 transform md:-translate-x-1/2" />
-                )}
-              </div>
+export function CareerHistory() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Directly track scroll position with native responsiveness
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  // Deterministic active index matching the 4 stages
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    if (latest >= 0.75) {
+      setActiveIndex(3);
+    } else if (latest >= 0.45) {
+      setActiveIndex(2);
+    } else if (latest >= 0.15) {
+      setActiveIndex(1);
+    } else {
+      setActiveIndex(0);
+    }
+  });
+
+  // Smooth jump to any card
+  const scrollToCard = (index: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const scrollTop = window.scrollY + rect.top;
+    const scrollableDistance = containerRef.current.scrollHeight - window.innerHeight;
+    const targets = [0.05, 0.38, 0.68, 0.95];
+    window.scrollTo({
+      top: scrollTop + scrollableDistance * targets[index],
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <section
+      id="career"
+      ref={containerRef}
+      className="relative"
+      style={{
+        // 360vh total scroll depth (90vh per company), providing comfortable natural scrolling
+        height: `${jobs.length * 90}vh`,
+        background: '#050505',
+        borderBottom: '1px solid #1F1F1F',
+      }}
+    >
+      {/* Sticky Full-Screen Viewport */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between">
+        {/* Top Minimal Editorial Navigation */}
+        <div
+          className="relative z-30 pt-16 sm:pt-20 px-6 lg:px-12 w-full max-w-7xl mx-auto flex items-center justify-between"
+          style={{ borderBottom: '1px solid #141414', paddingBottom: '1rem' }}
+        >
+          <div>
+            <p className="section-num">03 — Experience</p>
+            <h2
+              className="text-lg sm:text-xl font-bold tracking-tight text-[#F8F8F8] mt-0.5"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+            >
+              Work <span className="text-[#F59E0B]">History</span>
+            </h2>
+          </div>
+
+          {/* Minimal Company Numbers / Switcher */}
+          <div className="flex items-center gap-2 sm:gap-4 font-mono text-xs">
+            {jobs.map((j, i) => (
+              <button
+                key={i}
+                onClick={() => scrollToCard(i)}
+                className="transition-colors duration-200 cursor-pointer flex items-center gap-1.5 py-1 px-1.5"
+                style={{
+                  color: activeIndex === i ? '#F59E0B' : '#555555',
+                  borderBottom: activeIndex === i ? '1px solid #F59E0B' : '1px solid transparent',
+                }}
+              >
+                <span>{j.num}</span>
+                <span className="hidden md:inline">{j.company.split(' ')[0]}</span>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Career Progress Footer */}
-        <div className="text-center mt-16 pt-8 border-t border-border/50">
-          <p className="text-muted-foreground text-sm">
-            Continuously growing and embracing new challenges in software development
-          </p>
+        {/* Stacked Full-Screen Unboxed Screens */}
+        <div className="relative flex-1 w-full h-full flex items-center justify-center overflow-hidden">
+          {jobs.map((job, index) => (
+            <ExperienceScreen
+              key={index}
+              job={job}
+              index={index}
+              scrollYProgress={scrollYProgress}
+            />
+          ))}
+        </div>
+
+        {/* Bottom Minimal Progress Bar */}
+        <div
+          className="relative z-30 pb-5 px-6 lg:px-12 w-full max-w-7xl mx-auto flex items-center justify-between text-xs font-mono text-[#555]"
+          style={{ borderTop: '1px solid #141414', paddingTop: '0.75rem' }}
+        >
+          <span>Scroll to explore timeline</span>
+          <div className="flex items-center gap-3">
+            <span>0{activeIndex + 1}</span>
+            <div className="w-24 h-[2px] bg-[#1A1A1A] overflow-hidden">
+              <div
+                className="h-full bg-[#F59E0B] transition-all duration-300 ease-out"
+                style={{ width: `${((activeIndex + 1) / jobs.length) * 100}%` }}
+              />
+            </div>
+            <span>0{jobs.length}</span>
+          </div>
         </div>
       </div>
     </section>
