@@ -5,10 +5,10 @@ import { Github, Linkedin, Mail } from 'lucide-react';
 import Image from 'next/image';
 
 const stats = [
-  { value: '2+',  label: 'Years Experience' },
+  { value: '2+', label: 'Years Experience' },
   { value: '15+', label: 'Projects Shipped' },
-  { value: '4',   label: 'Companies' },
-  { value: '∞',   label: 'Lines of Code' },
+  { value: '4', label: 'Companies' },
+  { value: '∞', label: 'Lines of Code' },
 ];
 
 export function About() {
@@ -134,7 +134,7 @@ export function About() {
               }}
             >
               Currently working at <span style={{ color: '#F59E0B' }}>Axonall Global</span> and{' '}
-              <span style={{ color: '#F59E0B' }}>DennamLK</span>, I specialize in React, Next.js,
+              <span style={{ color: '#F59E0B' }}>Miraq LABS</span>, I specialize in React, Next.js,
               Node.js, and cloud infrastructure. I care deeply about performance,
               accessibility, and developer experience.
             </p>

@@ -73,14 +73,14 @@ export function Hero() {
             transitionDelay: '100ms',
           }}
         >
-          <span className="relative flex h-2 w-2">
+          {/* <span className="relative flex h-2 w-2">
             <span
               className="absolute inline-flex h-full w-full rounded-full animate-ping-slow"
               style={{ background: '#22c55e', opacity: 0.5 }}
             />
             <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: '#22c55e' }} />
-          </span>
-          <span className="text-label" style={{ color: '#A0A0A0' }}>Available for new projects</span>
+          </span> */}
+          {/* <span className="text-label" style={{ color: '#A0A0A0' }}>Available for new projects</span> */}
         </div>
 
         {/* Center: Giant name */}

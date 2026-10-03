@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -490,4 +490,11 @@
     pointer-events: none;
     z-index: 9999;
   }
+
+  @keyframes traceLine {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(400%); }
+    100% { transform: translateX(800%); }
+  }
 }
+
